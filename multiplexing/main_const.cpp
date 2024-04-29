@@ -66,7 +66,7 @@ int epoll_fd;
 int main(int ac, char **av){
 
     Helpers help;
-    if(issam_main(ac, av, help) != -1){
+    issam_main(ac, av, help);
         // exit(1);
         struct sigaction sa = {};
         sa.sa_handler = SIG_IGN;
@@ -76,9 +76,6 @@ int main(int ac, char **av){
             std::cout << "the socke couldnt be created ." << std::endl;
             exit(1);
         }
-    }
-    else
-        exit(1);
 }
 
 Webserve::~Webserve(){};

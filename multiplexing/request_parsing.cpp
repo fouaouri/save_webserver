@@ -64,16 +64,13 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
 				return (-1);
             if(content_type(multi_fd, help, res) == -1)
 				return (-1);
-			if(multi_fd[fd].postCheck == false || multi_fd[fd].deleteCheck == false || multi_fd[fd].getCheck == false)
-			{
-				res._statusCode = "404";
-				res._message = "404 Not Found";
-				res._contentType = "text/html";
-				res._Rpnse = true;
-				return -1;
-			}
             if(multi_fd[fd].HTTP_method == "POST")
 			{
+				if(multi_fd[fd].postCheck == false){
+					res._Rpnse = true;
+					res._Method = true;
+					return -1;
+				}
 				post_cases(multi_fd, help);
 				if(multi_fd[fd].content_type == 'L')
 				{
@@ -250,11 +247,17 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 		{
 			if(get_headers(multi_fd, help, temporaire, res) == -1){
 				if(!res._Rpnse){
+					
 					std::cout << "henna0\n";
 					res._statusCode = "400";
 					res._message = "400 Bad Request";
 					res._contentType = "text/html";
 					res._Rpnse = true;
+				}
+				if(!res._Method){
+					res._statusCode = "404";
+					res._message = "404 Not Found";
+					res._contentType = "text/html";
 				}
 				return ;
 			}
@@ -267,6 +270,14 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 	multi_fd[fd].content_l = 0;
 	if(multi_fd[fd].HTTP_method == "POST")
 	{
+		if(multi_fd[fd].postCheck == false)
+		{
+			res._statusCode = "404";
+			res._message = "404 Not Found";
+			res._contentType = "text/html";
+			res._Rpnse = true;
+			return ;
+		}
 		if(multi_fd[fd].flag1 == 1)
 			if(get_Body_part(multi_fd, help, buff, res) == -1){
 				std::cout << "henna1\n";
@@ -278,10 +289,20 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 			}
 	}
 	else if (multi_fd[fd].HTTP_method == "GET") {
+		if(multi_fd[fd].getCheck == false){
+
+		}
 		res.getMethod(multi_fd, fd, help);
 		res._Rpnse = true;
 	}
 	else if (multi_fd[fd].HTTP_method == "DELETE") {
+		if(multi_fd[fd].deleteCheck == false){
+			res._statusCode = "404";
+				res._message = "404 Not Found";
+				res._contentType = "text/html";
+				res._Rpnse = true;
+				return ;
+		}
 		delete_method(multi_fd, fd, help, res);
 	}
 	else{

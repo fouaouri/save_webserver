@@ -226,7 +226,8 @@ int issam_main(int ac,  char **av, Helpers &help) {
     }
     catch(std::runtime_error &e){
             std::cout << "Error:\n something went wrong during reading the configFile." << std::endl;
-            return -1; 
+            // return -1; 
+            exit(1);
     }
     return 0;
 }

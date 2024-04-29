@@ -40,6 +40,7 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 			|| (_statusCode == "200" && multi_fd[fd].response_success)){
 		createHtmlResponse(multi_fd ,fd, buff);//** send simple html page
 		return ;
+		
 	}
 	if(!_isHeader && !_isDirectory){
 		_file.open(_URI.c_str(), std::ios::in | std::ios::out);

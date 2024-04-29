@@ -135,10 +135,6 @@ void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* hel
 				return ;
 			}
 			if (!(*it)._Index.empty() || !(*it)._rootDirectoryLocation.empty() || !help->obj._rootDirectory.empty()){
-				std::cout << multi_fd[fd].locat._postCheck << "|" << multi_fd[fd].locat._getCheck << "|" << multi_fd[fd].locat._deleteCheck<< std::endl;
-				multi_fd[fd].postCheck = multi_fd[fd].locat._postCheck;
-				multi_fd[fd].deleteCheck = multi_fd[fd].locat._deleteCheck;
-				multi_fd[fd].getCheck = multi_fd[fd].locat._getCheck;
 				std::string first = _URI;
 				_URI.clear();
 				if (!(*it)._rootDirectoryLocation.empty())
