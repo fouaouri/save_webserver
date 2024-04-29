@@ -90,6 +90,7 @@ class Response {
     int                         _responseLen;
     int                         _allResponseBodyLen;
     bool                        _Rpnse;
+    bool                        _Method;
     Response();
     ~Response();
     void        createHeader(std::string contentLength);
@@ -97,7 +98,7 @@ class Response {
     std::string getExtension()const;
     int         resourceType();
     void        convertExtention();
-    void        uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* help);
+    void        uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* help, int serverIndex);
     void	    findFiles(int fd);
     bool        checkLocation(std::string &path);
     void        sendResponse(std::map<int, Webserve>&multi_fd ,int fd);
@@ -121,6 +122,7 @@ class   location{
     std::string _Index;
     std::string _return;
     std::string _uploadStore;
+    location();
 };
 class   configParss{
     std::string _port;
@@ -136,6 +138,8 @@ class   configParss{
         std::string _rootIndex;
         std::string _maxLength_str;
         int _maxLength;
+        configParss();
+        ~configParss();
         std::string readConfigFile(void);
         void        fillInfo(std::string file);
         void        setPort(std::string port);
@@ -236,8 +240,11 @@ class   Webserve{
         int max_length;
         clock_t time_out;
         // cgi
-
+        bool    postCheck;
+        bool    getCheck;
+        bool    deleteCheck;
         configParss config;
+        location    locat;
 };
 
 int         creat_socket_and_epoll(Helpers *help);

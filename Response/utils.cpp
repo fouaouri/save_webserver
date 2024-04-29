@@ -124,9 +124,10 @@ int	Response::resourceType(){
 	return NOT_FOUND;
 }
 
-void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* help)   {
+void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* help, int serverIndex)   {
 	_URI = multi_fd[fd].request_URI;
-	for(std::vector<location>::iterator it = help->obj._locationScoops.begin(); it != help->obj._locationScoops.end(); it++){
+	std::vector<location>& locationScoops = _srv[serverIndex]._locationScoops;
+    for (std::vector<location>::iterator it = locationScoops.begin(); it != locationScoops.end(); it++){
 		if (_URI.find((*it)._locationPath) == 0){
 			if ((*it)._autoIndex == 0){
 				_statusCode = "403";
@@ -134,6 +135,10 @@ void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* hel
 				return ;
 			}
 			if (!(*it)._Index.empty() || !(*it)._rootDirectoryLocation.empty() || !help->obj._rootDirectory.empty()){
+				std::cout << multi_fd[fd].locat._postCheck << "|" << multi_fd[fd].locat._getCheck << "|" << multi_fd[fd].locat._deleteCheck<< std::endl;
+				multi_fd[fd].postCheck = multi_fd[fd].locat._postCheck;
+				multi_fd[fd].deleteCheck = multi_fd[fd].locat._deleteCheck;
+				multi_fd[fd].getCheck = multi_fd[fd].locat._getCheck;
 				std::string first = _URI;
 				_URI.clear();
 				if (!(*it)._rootDirectoryLocation.empty())

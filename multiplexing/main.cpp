@@ -93,7 +93,7 @@ int creat_socket_and_epoll(Helpers *help){
 						if(multi_fd[help->events[help->i].data.fd].k > 0)
 							pars_request(multi_fd[help->events[help->i].data.fd].res,multi_fd, help,buff);
 					}
-					std::cout << "************>" << multi_fd[help->events[help->i].data.fd].res._statusCode << " | " << multi_fd[help->events[help->i].data.fd].res._message << std::endl;
+					// std::cout << "************>" << multi_fd[help->events[help->i].data.fd].res._statusCode << " | " << multi_fd[help->events[help->i].data.fd].res._message << std::endl;
 					if ((help->events[help->i].events & EPOLLOUT) && (multi_fd[help->events[help->i].data.fd].res._Rpnse == true || multi_fd[help->events[help->i].data.fd].response_success== true || multi_fd[help->events[help->i].data.fd].error_response == true)){
 						multi_fd[help->events[help->i].data.fd].time_out = clock();
 						multi_fd[help->events[help->i].data.fd].res.sendResponse(multi_fd, help->events[help->i].data.fd);
