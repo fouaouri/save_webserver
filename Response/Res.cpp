@@ -23,8 +23,6 @@ Response::~Response(){
 
 void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 	char *buff = new char[BUFFER_SIZE];
-	std::cout << "status code : " << _statusCode << std::endl;
-	std::cout << "message : " << _message << std::endl;
 	if (_statusCode == "301") {
 		std::string relativeURI = _URI.substr(_URI.find("/", 22));
 		_responseHead += "HTTP/1.1 " + _statusCode + " " + _message + "\r\n";
@@ -132,43 +130,5 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 			}
 		}
 	}
-// else if (!_isDirectory){
-// 		std::cout << "1 - URI : " << _URI << std::endl;
-// 		std::ostringstream  response_stream;
-// 		_contentType = "text/html";
-// 		createHeader(_fileSize);
-// 		strcpy(buff, _responseHead.c_str());
-// 		if (send(fd, buff, _responseHead.length(), 0) == -1){
-// 			close(fd);
-// 			epoll_ctl(epoll_fd,EPOLL_CTL_DEL,fd,NULL);
-// 			multi_fd.erase(fd);
-// 			return ;
-// 		}
-//     	response_stream << "<!DOCTYPE html>\n"
-//                     << "<html>\n"
-//                     << "<head>\n"
-//                     << "<style>\n"
-//                     << "    body {\n"
-//                     << "        background-color: black;\n"
-//                     << "        display: flex;\n"
-//                     << "        justify-content: center;\n"
-//                     << "        align-items: center;\n"
-//                     << "        height: 100vh;\n"
-//                     << "        margin: 0;\n"
-//                     << "    }\n"
-//                     << "    h1 {\n"
-//                     << "        color: white;\n"
-//                     << "    }\n"
-//                     << "</style>\n"
-//                     << "<title>" << _message << "</title>\n"
-//                     << "</head>\n"
-//                     << "<body>\n"
-//                     << "<h1>" << _message << "</h1>\n"
-//                     << "</body>\n"
-//                     << "</html>\n";
-// 		_response = response_stream.str();
-// 		strcpy(buff, _response.c_str());
-// 		send(fd, buff, _response.length(), 0);
-// 	}
 	return ;
 }
