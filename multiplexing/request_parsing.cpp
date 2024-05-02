@@ -24,7 +24,6 @@ bool		pars_http_version(std::string	HTTP_version){
 int   request_line(std::map<int , Webserve>&multi_fd, Helpers *help, std::string temporaire){
 		int fd = help->events[help->i].data.fd;
 		size_t pos0;
-		std::cout << temporaire << std::endl;
 		std::istringstream iss(temporaire);
 		pos0 = temporaire.find("\r\n");
 		if(pos0 != std::string::npos)
@@ -58,11 +57,8 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
 		pos0 = multi_fd[fd].header.find("\r\n\r\n");
 		if(pos0 != std::string::npos)
 		{
-					std::cout << "henna2\n";
-
 			temporaire = multi_fd[fd].header.substr(pos0 + 4, multi_fd[fd].header.length() - (pos0 + 4));
 			multi_fd[fd].headers = multi_fd[fd].header.substr(0, pos0);
-			std::cout << "headers : " << multi_fd[fd].headers << std::endl;
 			if(content_length(multi_fd, help, res) == -1)
 				return (-1);
             if(content_type(multi_fd, help, res) == -1){
@@ -73,7 +69,6 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
             if(multi_fd[fd].HTTP_method == "POST")
 			{
 				if(multi_fd[fd].postCheck == false){
-					std::cout << "content type : " << multi_fd[fd].HTTP_method << std::endl;
 					res._Rpnse = true;
 					res._Method = true;
 					return -1;
@@ -88,7 +83,6 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
 						res._Rpnse = true;
 						return (-1);
 						// Request Entity Too Large || 413
-						std::cout << "henna3\n";
 					}
 
 					multi_fd[fd].dec = atoi(multi_fd[fd].len.c_str());
@@ -97,8 +91,6 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
 					if(multi_fd[fd].dec < 0)
 						multi_fd[fd].Body = multi_fd[fd].Body.substr(0, multi_fd[fd].content_Length);
 					if(multi_fd[fd].dec <= 0){
-					std::cout << "henna4\n";
-
 						create_the_request_file(multi_fd, help, res);
 						return 0;
 					}
@@ -245,7 +237,6 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 		std::string temporaire(buff,multi_fd[fd].k);
 		if(multi_fd[fd].flag != 1)
 			if(request_line(multi_fd, help, temporaire) == -1){
-				std::cout << "henna\n";
 				res._statusCode = "400";
         		res._message = "400 Bad Request";
 				res._contentType = "text/html";
@@ -253,14 +244,11 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 				return ;
 			}
 		res.uriParss(multi_fd, fd, help, help->server_index);
-		std::cout << ">>>>>>>>" << res._URI << std::endl;
 		if(multi_fd[fd].flag1 != 1 && multi_fd[fd].flag == 1)
 		{
-					std::cout << "henna0\n";
 			if(get_headers(multi_fd, help, temporaire, res) == -1){
 				if(!res._Rpnse){
 					
-					std::cout << "henna0\n";
 					res._statusCode = "400";
 					res._message = "400 Bad Request";
 					res._contentType = "text/html";

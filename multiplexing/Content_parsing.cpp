@@ -1,7 +1,6 @@
 #include"webserve.hpp"
 
 void    post_cases(std::map<int , Webserve>&multi_fd, Helpers *help){
-    std::cout << "content ttttype : " << multi_fd[(help->events[help->i].data.fd)].content_type << std::endl;
     size_t pos = multi_fd[(help->events[help->i].data.fd)].headers.find("Transfer-Encoding: chunked");
     if(pos != std::string::npos)
         multi_fd[(help->events[help->i].data.fd)].content_type = 'C';
@@ -13,15 +12,12 @@ int    content_type(std::map<int , Webserve>&multi_fd, Helpers *help, Response& 
     size_t pos1 = multi_fd[(help->events[help->i].data.fd)].headers.find("Content-Type: ");
     if(pos1 != std::string::npos)
     {
-        std::cout << "here 0\n";
         std::string content_type = multi_fd[(help->events[help->i].data.fd)].headers.substr(pos1, multi_fd[(help->events[help->i].data.fd)].headers.length());
         pos1 =  content_type.find("\r\n");
         multi_fd[(help->events[help->i].data.fd)].content_Type = content_type.substr(strlen("Content-Type: "), pos1 - strlen("Content-Type: "));
-        std::cout << "content type 1: " << multi_fd[(help->events[help->i].data.fd)].content_Type << std::endl;
         return(0);
     }
     else if (pos1 == std::string::npos && multi_fd[help->events[help->i].data.fd].HTTP_method == "POST"){
-        std::cout << "here 1\n";
 
         // throw ResponseException("400" ,"Bad Request");
         res._statusCode = "400";
@@ -102,7 +98,6 @@ void setOut(std::map<int, Webserve>& multi_fd, Helpers* help){
 
 void    get_the_content_of_the_file(std::map<int , Webserve>&multi_fd, Helpers *help, Response& res){
     setOut(multi_fd, help);
-					std::cout << "henna4\n";
 
     int fd = help->events[help->i].data.fd;
     multi_fd[fd].out += check_ext(multi_fd, help);
@@ -117,6 +112,5 @@ void    get_the_content_of_the_file(std::map<int , Webserve>&multi_fd, Helpers *
         multi_fd[help->events[help->i].data.fd].response_success = true;
         res._statusCode = "200";
         res._message = "Ok";
-        std::cout << "hnaya : " << res._statusCode << " | " << res._message << " | " << multi_fd[help->events[help->i].data.fd].response_success << std::endl;
     }
 }
