@@ -23,6 +23,8 @@ Response::~Response(){
 
 void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 	char *buff = new char[BUFFER_SIZE];
+	std::cout << "status code : " << _statusCode << std::endl;
+	std::cout << "message : " << _message << std::endl;
 	if (_statusCode == "301") {
 		std::string relativeURI = _URI.substr(_URI.find("/", 22));
 		_responseHead += "HTTP/1.1 " + _statusCode + " " + _message + "\r\n";
@@ -35,7 +37,6 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 		multi_fd.erase(fd);
 		return;
 	}
-	std::cout << "->>> response success : " << multi_fd[fd].response_success << std::endl;
 	if (_statusCode == "404" || _statusCode == "403" || _statusCode == "408" || _statusCode == "500"
 			|| _statusCode == "501" || _statusCode == "400" || _statusCode == "413"
 			|| (_statusCode == "200" && multi_fd[fd].response_success == true)){

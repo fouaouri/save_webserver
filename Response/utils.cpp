@@ -1,6 +1,7 @@
 #include "Res.hpp"
 
 bool Response::checkLocation(std::string &path)   {
+	std::cout << "path: " << path << "\n";
     if (access(path.c_str(), F_OK) == 0 && access(path.c_str(), R_OK) == 0)
         return true;
     else {
@@ -15,6 +16,7 @@ bool Response::checkLocation(std::string &path)   {
             }
             pos = path.find("%20", pos + 1);
         }
+		std::cout << "path not found\n";
         return false;
     }
 }
@@ -109,6 +111,7 @@ void    Response::convertExtention() {
 }
 
 int	Response::resourceType(){
+	std::cout << "URI >> " << _URI << std::endl;
 	if (!checkLocation(_URI))
 		return NOT_FOUND;
 	DIR *dir = opendir(_URI.c_str());
@@ -132,11 +135,6 @@ void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* hel
 			multi_fd[fd].postCheck = (*it)._postCheck;
 			multi_fd[fd].deleteCheck = (*it)._deleteCheck;
 			multi_fd[fd].getCheck = (*it)._getCheck;
-			if ((*it)._autoIndex == 0){
-				_statusCode = "403";
-				_message = "Forbidden";
-				return ;
-			}
 			if (!(*it)._Index.empty() || !(*it)._rootDirectoryLocation.empty() || !help->obj._rootDirectory.empty()){
 				std::string first = _URI;
 				_URI.clear();
@@ -144,8 +142,15 @@ void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* hel
 					_URI = (*it)._rootDirectoryLocation + first;
 				else if (!help->obj._rootDirectory.empty())
 					_URI = help->obj._rootDirectory + first;
-				if (!(*it)._Index.empty())
+				if (!(*it)._Index.empty() && (*it)._autoIndex == 0)
 					_URI += (*it)._Index;
+				std::cout << "URI: " << _URI << std::endl;
+				std::cout << "status code : " << _statusCode << std::endl;
+				return ;
+			}
+			else if ((*it)._autoIndex == 0){
+				_statusCode = "403";
+				_message = "Forbidden";
 				return ;
 			}
 		}

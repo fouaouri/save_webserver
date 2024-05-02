@@ -6,6 +6,7 @@ void Response::getMethod(std::map<int, Webserve>& multi_fd, int fd, Helpers* hel
 	(void)help;
 	(void)fd;
 	int type = resourceType();
+	std::cout << "type: " << type << std::endl;
 	if (type == NOT_FOUND) {
 		if (access(_URI.c_str(), F_OK) == 0){
 			_statusCode = "403";

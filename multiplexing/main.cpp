@@ -98,9 +98,9 @@ int creat_socket_and_epoll(Helpers *help){
 						multi_fd[help->events[help->i].data.fd].time_out = clock();
 						multi_fd[help->events[help->i].data.fd].res.sendResponse(multi_fd, help->events[help->i].data.fd);
 					}
-					// std::cout << "time : " << (((double) (clock() - multi_fd[help->events[help->i].data.fd].time_out)) / CLOCKS_PER_SEC) << std::endl;
-					if(((double) (clock() - multi_fd[help->events[help->i].data.fd].time_out)) / CLOCKS_PER_SEC > 10)
+					if(((double) (clock() - multi_fd[help->events[help->i].data.fd].time_out)) / CLOCKS_PER_SEC > 20)
 					{
+						std::cout << "time : " << (((double) (clock() - multi_fd[help->events[help->i].data.fd].time_out)) / CLOCKS_PER_SEC) << std::endl;
 						multi_fd[help->events[help->i].data.fd].res._statusCode = "408";
         				multi_fd[help->events[help->i].data.fd].res._message = "408 Request Timeout";
 						multi_fd[help->events[help->i].data.fd].res._contentType = "text/html";
