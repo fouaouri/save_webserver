@@ -58,15 +58,22 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
 		pos0 = multi_fd[fd].header.find("\r\n\r\n");
 		if(pos0 != std::string::npos)
 		{
+					std::cout << "henna2\n";
+
 			temporaire = multi_fd[fd].header.substr(pos0 + 4, multi_fd[fd].header.length() - (pos0 + 4));
 			multi_fd[fd].headers = multi_fd[fd].header.substr(0, pos0);
+			std::cout << "headers : " << multi_fd[fd].headers << std::endl;
 			if(content_length(multi_fd, help, res) == -1)
 				return (-1);
-            if(content_type(multi_fd, help, res) == -1)
+            if(content_type(multi_fd, help, res) == -1){
+
 				return (-1);
+			}
+
             if(multi_fd[fd].HTTP_method == "POST")
 			{
 				if(multi_fd[fd].postCheck == false){
+					std::cout << "content type : " << multi_fd[fd].HTTP_method << std::endl;
 					res._Rpnse = true;
 					res._Method = true;
 					return -1;
@@ -81,13 +88,17 @@ int    get_headers(std::map<int , Webserve>&multi_fd, Helpers *help, std::string
 						res._Rpnse = true;
 						return (-1);
 						// Request Entity Too Large || 413
+						std::cout << "henna3\n";
 					}
+
 					multi_fd[fd].dec = atoi(multi_fd[fd].len.c_str());
 					multi_fd[fd].dec -= (temporaire.length());
 					multi_fd[fd].Body.append(temporaire.c_str(),temporaire.size());
 					if(multi_fd[fd].dec < 0)
 						multi_fd[fd].Body = multi_fd[fd].Body.substr(0, multi_fd[fd].content_Length);
 					if(multi_fd[fd].dec <= 0){
+					std::cout << "henna4\n";
+
 						create_the_request_file(multi_fd, help, res);
 						return 0;
 					}
@@ -245,6 +256,7 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 		std::cout << ">>>>>>>>" << res._URI << std::endl;
 		if(multi_fd[fd].flag1 != 1 && multi_fd[fd].flag == 1)
 		{
+					std::cout << "henna0\n";
 			if(get_headers(multi_fd, help, temporaire, res) == -1){
 				if(!res._Rpnse){
 					
@@ -261,6 +273,7 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 				}
 				return ;
 			}
+
 			if(multi_fd[fd].HTTP_method == "POST")
 				return ;
 		}
@@ -280,13 +293,13 @@ void    pars_request(Response &res, std::map<int , Webserve>&multi_fd, Helpers *
 		}
 		if(multi_fd[fd].flag1 == 1)
 			if(get_Body_part(multi_fd, help, buff, res) == -1){
-				std::cout << "henna1\n";
 				res._statusCode = "413";
 				res._message = "413 Request Entity Too Large";
 				res._contentType = "text/html";
 				res._Rpnse = true;
 				return ;
 			}
+
 	}
 	else if (multi_fd[fd].HTTP_method == "GET") {
 		if(multi_fd[fd].getCheck == false){

@@ -35,9 +35,10 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 		multi_fd.erase(fd);
 		return;
 	}
+	std::cout << "->>> response success : " << multi_fd[fd].response_success << std::endl;
 	if (_statusCode == "404" || _statusCode == "403" || _statusCode == "408" || _statusCode == "500"
 			|| _statusCode == "501" || _statusCode == "400" || _statusCode == "413"
-			|| (_statusCode == "200" && multi_fd[fd].response_success)){
+			|| (_statusCode == "200" && multi_fd[fd].response_success == true)){
 		createHtmlResponse(multi_fd ,fd, buff);//** send simple html page
 		return ;
 		

@@ -129,6 +129,9 @@ void   Response::uriParss(std::map<int, Webserve>& multi_fd, int fd,Helpers* hel
 	std::vector<location>& locationScoops = _srv[serverIndex]._locationScoops;
     for (std::vector<location>::iterator it = locationScoops.begin(); it != locationScoops.end(); it++){
 		if (_URI.find((*it)._locationPath) == 0){
+			multi_fd[fd].postCheck = (*it)._postCheck;
+			multi_fd[fd].deleteCheck = (*it)._deleteCheck;
+			multi_fd[fd].getCheck = (*it)._getCheck;
 			if ((*it)._autoIndex == 0){
 				_statusCode = "403";
 				_message = "Forbidden";

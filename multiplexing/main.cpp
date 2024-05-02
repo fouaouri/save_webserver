@@ -72,7 +72,7 @@ int creat_socket_and_epoll(Helpers *help){
 							client_socket = accept(help->socketat[l], 0, 0);
 							if(client_socket == -1){
 								std::cout << "accept error" << std::endl;
-								return(1);
+								continue ;
 							}
 							multipl.events = EPOLLIN | EPOLLOUT;
 							multipl.data.fd = client_socket;
@@ -95,6 +95,7 @@ int creat_socket_and_epoll(Helpers *help){
 					}
 					// std::cout << "************>" << multi_fd[help->events[help->i].data.fd].res._statusCode << " | " << multi_fd[help->events[help->i].data.fd].res._message << std::endl;
 					if ((help->events[help->i].events & EPOLLOUT) && (multi_fd[help->events[help->i].data.fd].res._Rpnse == true || multi_fd[help->events[help->i].data.fd].response_success== true || multi_fd[help->events[help->i].data.fd].error_response == true)){
+						std::cout << "status code : " << multi_fd[help->events[help->i].data.fd].res._statusCode << std::endl;
 						multi_fd[help->events[help->i].data.fd].time_out = clock();
 						multi_fd[help->events[help->i].data.fd].res.sendResponse(multi_fd, help->events[help->i].data.fd);
 					}
