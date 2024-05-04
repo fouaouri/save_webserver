@@ -50,6 +50,7 @@ void    remove_dir(std::map<int, Webserve>&multi_fd, int fd, Helpers *help, cons
 		}
 	}
 	closedir(dir);
+	dir = NULL;
 	// Remove the empty directory itself
 	if (rmdir(path) != 0) {
 		// throw ResponseException("400", "Bad Request");

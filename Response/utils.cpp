@@ -80,6 +80,8 @@ void	Response::findFiles(int fd){
 	response += file;
 	_contentLength = to_string(response.size());
 	createHeader(_contentLength);
+	closedir(dir);
+	dir = NULL;
 	if (send(fd, _responseHead.c_str(), _responseHead.length(), 0) == -1){
 		close(fd);
 		epoll_ctl(epoll_fd,EPOLL_CTL_DEL,fd,NULL);
@@ -91,6 +93,7 @@ void	Response::findFiles(int fd){
 		return ;
 	}
     _file.close();
+
 }
 
 void    Response::convertExtention() {

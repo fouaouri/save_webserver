@@ -72,6 +72,7 @@ int creat_socket_and_epoll(Helpers *help){
 							client_socket = accept(help->socketat[l], 0, 0);
 							if(client_socket == -1){
 								std::cout << "accept error" << std::endl;
+								close (help->events[help->i].data.fd);
 								continue ;
 							}
 							multipl.events = EPOLLIN | EPOLLOUT;

@@ -24,10 +24,10 @@ private:
     std::string                         script_name;
     std::string                         cgi_path;
     bool                                running;
-    clock_t                             start;
+    // clock_t                             start;
     pid_t                               pid;
     int                                 status;
-    int                                 file_length;
+    // int                                 file_length;
     std::string                         cgi_body;
     std::string                         extension;
 

@@ -22,9 +22,9 @@ Response::~Response(){
 }
 
 void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
-	char *buff = new char[BUFFER_SIZE];
+	char buff[BUFFER_SIZE];
 	if (_statusCode == "301") {
-		std::string relativeURI = _URI.substr(_URI.find("/", 22));
+		std::string relativeURI = _URI.substr(_URI.find("/", 30));
 		_responseHead += "HTTP/1.1 " + _statusCode + " " + _message + "\r\n";
 		_responseHead += "Location: " + relativeURI + "\r\n";
 		_responseHead += "Content-Length: " + to_string(0) + "\r\n\r\n";
@@ -45,7 +45,6 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 	if(!_isHeader && !_isDirectory){
 		_file.open(_URI.c_str(), std::ios::in | std::ios::out);
 		if (!_file.good() && !_isDirectory) { // file not found
-			_errorfileGood = errno;
 			_statusCode = "403";
 			_message = "Forbidden";
 			if (!_isHeader){
@@ -83,14 +82,14 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 		return ;
 	}
 	else if ((_statusCode == "200") && !_isDirectory) {//chunked start
-		char buff[BUFFER_SIZE];
+		char chunkk[BUFFER_SIZE];
 		if (!checkHeader(_responseHead)){
-			_statusCode == "400";
+			_statusCode = "400";
 			_message = "Bad Request";
-			createHtmlResponse(multi_fd ,fd, buff);
+			createHtmlResponse(multi_fd ,fd, chunkk);
 			return ;
 		}
-		_file.read(buff, BUFFER_SIZE);
+		_file.read(chunkk, BUFFER_SIZE);
 		std::streamsize bytesRead = _file.gcount();
 		if (bytesRead > 0) {
 			std::ostringstream chunkHeader;
@@ -103,7 +102,7 @@ void Response::sendResponse(std::map<int, Webserve>&multi_fd ,int fd){
 				multi_fd.erase(fd);
 				return;
 			}
-			if (send(fd, buff, bytesRead, 0) == -1) {
+			if (send(fd, chunkk, bytesRead, 0) == -1) {
 				close(fd);
 				epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, NULL);
 				multi_fd.erase(fd);
